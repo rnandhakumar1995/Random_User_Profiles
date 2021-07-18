@@ -2,10 +2,8 @@ package io.nandha.userprofiles.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
@@ -40,10 +38,9 @@ class MainActivity() : AppCompatActivity() {
 
     private fun setupAdapter(userList: RecyclerView): UserListAdapter {
         val userListAdapter = UserListAdapter()
-        userListAdapter.withLoadStateFooter(footer = LoadingStateAdapter { userListAdapter.retry() })
-        userList.adapter = userListAdapter
+        userList.adapter = userListAdapter.withLoadStateFooter(footer = LoadingStateAdapter { userListAdapter.retry() })
         userList.layoutManager = LinearLayoutManager(this)
-        userListAdapter.addLoadStateListener { it ->
+        userListAdapter.addLoadStateListener {
             val isListEmpty = it.refresh is LoadState.NotLoading && userListAdapter.itemCount == 0
             showEmptyList(isListEmpty)
             activityMainBinding.userList.visibility =
@@ -52,28 +49,11 @@ class MainActivity() : AppCompatActivity() {
                 if (it.source.refresh is LoadState.Loading) View.VISIBLE else View.GONE
             activityMainBinding.retry.visibility =
                 if (it.source.refresh is LoadState.Error) View.VISIBLE else View.GONE
-            val errorState = it.source.append as? LoadState.Error
-                ?: it.source.prepend as? LoadState.Error
-                ?: it.append as? LoadState.Error
-                ?: it.prepend as? LoadState.Error
-            errorState?.let { error ->
-                Toast.makeText(
-                    this,
-                    "\uD83D\uDE28 Wooops ${error.error}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
         }
         return userListAdapter
     }
 
     private fun showEmptyList(show: Boolean) {
-        /*if (show) {
-            activityMainBinding.emptyList.visibility = View.VISIBLE
-            activityMainBinding.list.visibility = View.GONE
-        } else {
-            activityMainBinding.emptyList.visibility = View.GONE
-            activityMainBinding.list.visibility = View.VISIBLE
-        }*/
+
     }
 }
