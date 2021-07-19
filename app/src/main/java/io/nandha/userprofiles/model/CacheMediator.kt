@@ -19,6 +19,7 @@ class CacheMediator(
     }
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, User>): MediatorResult {
+
         val page = when (loadType) {
             LoadType.REFRESH -> {
                 val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
@@ -27,16 +28,22 @@ class CacheMediator(
             LoadType.PREPEND -> {
                 val remoteKeys = getRemoteKeyForFirstItem(state)
                 val prevKey = remoteKeys?.prevKey
-                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                if (prevKey == null) {
+                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                }
                 prevKey
             }
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
                 val nextKey = remoteKeys?.nextKey
-                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                println("nandhu Next key -> $nextKey is null ${nextKey == null} AND ${MediatorResult.Success(endOfPaginationReached = remoteKeys != null)}")
+                if (nextKey == null) {
+                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                }
                 nextKey
             }
         }
+
 
         try {
             val apiResponse = api.getUser(page)
@@ -56,22 +63,6 @@ class CacheMediator(
             exception.printStackTrace()
             return MediatorResult.Error(exception)
         }
-    }
-
-    private fun mapToUser(apiUsers: List<ApiUser>): List<User> {
-        val result = mutableListOf<User>()
-        for (user in apiUsers) {
-            result.add(user.run {
-                User(
-                    email,
-                    "${name.title}. ${name.first} ${name.last}",
-                    "${location.street}, ${location.city}, ${location.state}, ${location.country} - ${location.postcode}",
-                    "${location.coordinates.latitude},${location.coordinates.longitude}",
-                    cell, phone, picture.thumbnail, picture.large, dob.date, dob.age
-                )
-            })
-        }
-        return result
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, User>): RemoteKeys? {
@@ -96,5 +87,21 @@ class CacheMediator(
                 cacheDb.remoteKeysDao().remoteKeysRepoId(repoId)
             }
         }
+    }
+
+    private fun mapToUser(apiUsers: List<ApiUser>): List<User> {
+        val result = mutableListOf<User>()
+        for (user in apiUsers) {
+            result.add(user.run {
+                User(
+                    email,
+                    "${name.title}. ${name.first} ${name.last}",
+                    "${location.street}, ${location.city}, ${location.state}, ${location.country} - ${location.postcode}",
+                    "${location.coordinates.latitude},${location.coordinates.longitude}",
+                    cell, phone, picture.thumbnail, picture.large, dob.date, dob.age
+                )
+            })
+        }
+        return result
     }
 }

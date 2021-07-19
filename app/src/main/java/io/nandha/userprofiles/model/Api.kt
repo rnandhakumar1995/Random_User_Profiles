@@ -1,5 +1,6 @@
 package io.nandha.userprofiles.model
 
+import io.nandha.userprofiles.model.Repository.Companion.NETWORK_COUNT_PER_PAGE
 import io.nandha.userprofiles.model.data.Response
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,7 +13,7 @@ interface Api {
     /**
      * Get repos ordered by stars.
      */
-    @GET("/api/?results=25&seed=abc")
+    @GET("/api/?results=${NETWORK_COUNT_PER_PAGE}&seed=abc")
     suspend fun getUser(@Query("page") page: Int): Response
 
     companion object {
