@@ -8,7 +8,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import io.nandha.userprofiles.R
-import io.nandha.userprofiles.model.User
+import io.nandha.userprofiles.model.data.User
 
 class UserListAdapter : PagingDataAdapter<User, UserListAdapter.ViewHolder>(REPO_COMPARATOR) {
 

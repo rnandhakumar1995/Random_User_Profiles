@@ -4,6 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import io.nandha.userprofiles.model.data.User
 import kotlinx.coroutines.flow.Flow
 
 

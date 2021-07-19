@@ -5,6 +5,8 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
+import io.nandha.userprofiles.model.data.ApiUser
+import io.nandha.userprofiles.model.data.User
 
 @OptIn(ExperimentalPagingApi::class)
 class CacheMediator(
@@ -38,7 +40,7 @@ class CacheMediator(
 
         try {
             val apiResponse = api.getUser(page)
-            val repos = apiResponse.results
+            val repos = mapToUser(apiResponse.results)
             val endOfPaginationReached = repos.isEmpty()
             cacheDb.withTransaction {
                 val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
@@ -51,9 +53,27 @@ class CacheMediator(
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (exception: Exception) {
+            exception.printStackTrace()
             return MediatorResult.Error(exception)
         }
     }
+
+    private fun mapToUser(apiUsers: List<ApiUser>): List<User> {
+        val result = mutableListOf<User>()
+        for (user in apiUsers) {
+            result.add(user.run {
+                User(
+                    email,
+                    "${name.title}. ${name.first} ${name.last}",
+                    "${location.street}, ${location.city}, ${location.state}, ${location.country} - ${location.postcode}",
+                    "${location.coordinates.latitude},${location.coordinates.longitude}",
+                    cell, phone, picture.thumbnail, picture.large, dob.date, dob.age
+                )
+            })
+        }
+        return result
+    }
+
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, User>): RemoteKeys? {
         return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { repo ->

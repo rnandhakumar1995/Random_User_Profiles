@@ -2,6 +2,7 @@ package io.nandha.userprofiles.model
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import io.nandha.userprofiles.model.data.User
 
 const val STARTING_PAGE_INDEX = 1
 

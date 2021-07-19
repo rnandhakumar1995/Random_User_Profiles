@@ -1,5 +1,6 @@
 package io.nandha.userprofiles.model
 
+import io.nandha.userprofiles.model.data.Response
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

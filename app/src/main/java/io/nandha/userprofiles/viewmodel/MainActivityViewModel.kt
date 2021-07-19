@@ -2,13 +2,12 @@ package io.nandha.userprofiles.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.nandha.userprofiles.model.*
+import io.nandha.userprofiles.model.data.User
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.count
 
 class MainActivityViewModel (application: Application) : AndroidViewModel(application) {
     private var users: Flow<PagingData<User>>? = null
