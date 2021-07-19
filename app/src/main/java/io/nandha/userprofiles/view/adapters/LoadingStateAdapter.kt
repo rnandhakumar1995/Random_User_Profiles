@@ -1,26 +1,19 @@
 package io.nandha.userprofiles.view.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.nandha.userprofiles.R
 import io.nandha.userprofiles.databinding.LoadingStateBinding
+import io.nandha.userprofiles.view.hide
+import io.nandha.userprofiles.view.show
 
 class LoadingStateAdapter(private val retry: () -> Unit) :
     LoadStateAdapter<LoadingStateAdapter.LoadStateViewHolder>() {
     class LoadStateViewHolder(private val binding: LoadingStateBinding, retry: () -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
-        private fun View.show() {
-            visibility = View.VISIBLE
-        }
-
-        private fun View.hide() {
-            visibility = View.GONE
-        }
-
         init {
             binding.retry.setOnClickListener { retry() }
         }

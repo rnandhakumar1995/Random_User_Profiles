@@ -36,7 +36,6 @@ class CacheMediator(
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
                 val nextKey = remoteKeys?.nextKey
-                println("nandhu Next key -> $nextKey is null ${nextKey == null} AND ${MediatorResult.Success(endOfPaginationReached = remoteKeys != null)}")
                 if (nextKey == null) {
                     return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 }
