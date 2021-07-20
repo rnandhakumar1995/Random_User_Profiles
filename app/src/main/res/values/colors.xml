@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="border">#66000000</color>
     <color name="lightWhite">#FFEEEEEE</color>
+    <color name="grey">#DDDDDDDD</color>
 </resources>
