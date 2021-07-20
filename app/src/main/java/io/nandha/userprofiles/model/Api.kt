@@ -8,11 +8,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.lang.Exception
+import kotlin.jvm.Throws
 
 interface Api {
-    /**
-     * Get repos ordered by stars.
-     */
+
     @GET("/api/?results=${NETWORK_COUNT_PER_PAGE}&seed=abc")
     suspend fun getUser(@Query("page") page: Int): Response
 

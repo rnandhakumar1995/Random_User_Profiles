@@ -15,6 +15,12 @@ interface CacheDao {
     @Query("SELECT * FROM user WHERE name LIKE :nameQuery ORDER BY email ASC")
     fun searchUser(nameQuery: String): List<User>
 
+    @Query("SELECT * FROM user WHERE email = :email")
+    fun getUser(email: String): User
+
     @Query("SELECT * FROM user")
     fun getUsers(): PagingSource<Int, User>
+
+    @Query("DELETE FROM user")
+    suspend fun clearTable()
 }

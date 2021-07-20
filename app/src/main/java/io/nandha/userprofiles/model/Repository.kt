@@ -14,7 +14,6 @@ class Repository(private val api: Api, private val database: CacheDb) {
     }
 
     fun getUsers(): Flow<PagingData<User>> {
-        println("calling getUsers")
         val pagingSourceFactory = { database.reposDao().getUsers() }
         @OptIn(ExperimentalPagingApi::class)
         return Pager(

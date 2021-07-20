@@ -7,9 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
@@ -27,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity() : AppCompatActivity() {
     private lateinit var activityMainBinding: ActivityMainBinding
-    val searchResultAdapter by lazy { SearchResultAdapter(listOf()) }
+    private val searchResultAdapter by lazy { SearchResultAdapter(listOf()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +55,7 @@ class MainActivity() : AppCompatActivity() {
     private fun handleIntent(intent: Intent) {
         if (Intent.ACTION_SEARCH == intent.action) {
             val query = intent.getStringExtra(SearchManager.QUERY)
-
             activityMainBinding.searchResultList.apply { if (query.isNullOrEmpty()) hide() else show() }
-
             query?.let {
                 val users = CacheDb.getInstance(this).reposDao().searchUser("%$query%")
                 searchResultAdapter.updateList(users)
@@ -88,11 +84,11 @@ class MainActivity() : AppCompatActivity() {
     private fun setupAdapter(userList: RecyclerView): UserListAdapter {
         val userListAdapter = UserListAdapter()
         userList.adapter =
-            userListAdapter.withLoadStateFooter(footer = LoadingStateAdapter { userListAdapter.retry() })
+            userListAdapter.withLoadStateHeaderAndFooter(footer = LoadingStateAdapter { userListAdapter.retry() }, header = LoadingStateAdapter { userListAdapter.retry() })
         userList.layoutManager = LinearLayoutManager(this)
         userListAdapter.addLoadStateListener {
             val isListEmpty = it.refresh is LoadState.NotLoading && userListAdapter.itemCount == 0
-            showEmptyList(isListEmpty)
+            showErrorMessage(isListEmpty)
             activityMainBinding.userList.apply { if (it.source.refresh is LoadState.NotLoading) show() else hide() }
             activityMainBinding.loadingProgress.apply { if (it.source.refresh is LoadState.Loading) show() else hide() }
             activityMainBinding.retry.apply { if (it.source.refresh is LoadState.Error) show() else hide() }
@@ -100,7 +96,10 @@ class MainActivity() : AppCompatActivity() {
         return userListAdapter
     }
 
-    private fun showEmptyList(show: Boolean) {
-
+    private fun showErrorMessage(isListEmpty: Boolean) {
+        if (isListEmpty)
+            activityMainBinding.error.show()
+        else
+            activityMainBinding.error.hide()
     }
 }

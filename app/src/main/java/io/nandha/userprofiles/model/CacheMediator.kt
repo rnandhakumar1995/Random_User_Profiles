@@ -7,6 +7,7 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import io.nandha.userprofiles.model.data.ApiUser
 import io.nandha.userprofiles.model.data.User
+import io.nandha.userprofiles.view.mapToUser
 
 @OptIn(ExperimentalPagingApi::class)
 class CacheMediator(
@@ -28,27 +29,26 @@ class CacheMediator(
             LoadType.PREPEND -> {
                 val remoteKeys = getRemoteKeyForFirstItem(state)
                 val prevKey = remoteKeys?.prevKey
-                if (prevKey == null) {
-                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                }
+                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 prevKey
             }
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
                 val nextKey = remoteKeys?.nextKey
-                if (nextKey == null) {
-                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                }
+                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 nextKey
             }
         }
 
-
         try {
             val apiResponse = api.getUser(page)
-            val repos = mapToUser(apiResponse.results)
+            val repos = apiResponse.results.mapToUser()
             val endOfPaginationReached = repos.isEmpty()
             cacheDb.withTransaction {
+                if (loadType == LoadType.REFRESH) {
+                    cacheDb.remoteKeysDao().clearRemoteKeys()
+                    cacheDb.reposDao().clearTable()
+                }
                 val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
                 val keys = repos.map {
@@ -86,21 +86,5 @@ class CacheMediator(
                 cacheDb.remoteKeysDao().remoteKeysRepoId(repoId)
             }
         }
-    }
-
-    private fun mapToUser(apiUsers: List<ApiUser>): List<User> {
-        val result = mutableListOf<User>()
-        for (user in apiUsers) {
-            result.add(user.run {
-                User(
-                    email,
-                    "${name.title}. ${name.first} ${name.last}",
-                    "${location.street}, ${location.city}, ${location.state}, ${location.country} - ${location.postcode}",
-                    "${location.coordinates.latitude},${location.coordinates.longitude}",
-                    cell, phone, picture.thumbnail, picture.large, dob.date, dob.age
-                )
-            })
-        }
-        return result
     }
 }
