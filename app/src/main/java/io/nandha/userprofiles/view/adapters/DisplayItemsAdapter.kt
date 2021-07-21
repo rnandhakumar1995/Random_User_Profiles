@@ -21,11 +21,12 @@ class DisplayItemsAdapter(val items: List<DisplayItems>) :
             items[position].apply {
                 viewHolder.title.text = title
                 viewHolder.detail.text = detail
-                if(title == "Weather"){
+                if (title == "Weather") {
                     onClick.invoke(viewHolder)
-                }
-                viewHolder.itemView.setOnClickListener {
-                    onClick.invoke(viewHolder)
+                } else {
+                    viewHolder.itemView.setOnClickListener {
+                        onClick.invoke(viewHolder)
+                    }
                 }
             }
         }

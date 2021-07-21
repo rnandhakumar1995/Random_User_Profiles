@@ -35,16 +35,16 @@ class DisplayActivity : AppCompatActivity() {
         setContentView(view)
         viewModel = ViewModelProvider(this).get(DisplayActivityViewHolder::class.java)
         intent.extras?.getString("email")?.let {
-            val userItems = fillUI(viewModel.getUser(it))
+            val userItems = getDetailItems(viewModel.getUser(it))
             binding.userDetails.adapter = DisplayItemsAdapter(userItems)
         }
     }
 
-    private fun fillUI(user: User): List<DisplayItems> {
+    private fun getDetailItems(user: User): List<DisplayItems> {
         val fields = mutableListOf<DisplayItems>()
         user.apply {
             binding.toolbar.title = name
-            Picasso.get().load(picture).into(binding.profilePic)
+            Picasso.get().load(picture).placeholder(R.drawable.profile_placeholder).into(binding.profilePic)
             fields.add(DisplayItems("Email", email) {
                 val intent = Intent(Intent.ACTION_SENDTO)
                 intent.data = Uri.parse("mailto:")

@@ -1,4 +1,4 @@
-package io.nandha.userprofiles.model
+package io.nandha.userprofiles.model.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -5,9 +5,10 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import io.nandha.userprofiles.model.data.ApiUser
+import io.nandha.userprofiles.model.data.RemoteKeys
 import io.nandha.userprofiles.model.data.User
-import io.nandha.userprofiles.view.mapToUser
+import io.nandha.userprofiles.model.db.CacheDb
+import io.nandha.userprofiles.model.data.mapToUser
 
 @OptIn(ExperimentalPagingApi::class)
 class CacheMediator(
@@ -47,7 +48,7 @@ class CacheMediator(
             cacheDb.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     cacheDb.remoteKeysDao().clearRemoteKeys()
-                    cacheDb.reposDao().clearTable()
+                    cacheDb.cacheDao().clearTable()
                 }
                 val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
@@ -55,7 +56,7 @@ class CacheMediator(
                     RemoteKeys(repoId = it.email, prevKey = prevKey, nextKey = nextKey)
                 }
                 cacheDb.remoteKeysDao().insertAll(keys)
-                cacheDb.reposDao().insertAll(repos)
+                cacheDb.cacheDao().insertAll(repos)
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (exception: Exception) {

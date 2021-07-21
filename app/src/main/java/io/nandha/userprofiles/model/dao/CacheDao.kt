@@ -1,4 +1,4 @@
-package io.nandha.userprofiles.model
+package io.nandha.userprofiles.model.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao

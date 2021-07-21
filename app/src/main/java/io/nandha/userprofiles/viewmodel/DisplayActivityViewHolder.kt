@@ -3,9 +3,8 @@ package io.nandha.userprofiles.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.ExperimentalPagingApi
 import io.nandha.userprofiles.model.Api
-import io.nandha.userprofiles.model.CacheDb
+import io.nandha.userprofiles.model.db.CacheDb
 import io.nandha.userprofiles.model.data.User
 import io.nandha.userprofiles.model.data.WeatherResponse
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
@@ -16,7 +15,7 @@ class DisplayActivityViewHolder(application: Application) : AndroidViewModel(app
     val channel = ConflatedBroadcastChannel<WeatherResponse>()
 
     fun getUser(user: String): User {
-        return cacheDb.reposDao().getUser(user)
+        return cacheDb.cacheDao().getUser(user)
     }
 
     fun loadWeather(api: Api, coordinate: String) {

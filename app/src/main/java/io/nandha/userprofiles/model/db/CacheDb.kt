@@ -1,9 +1,12 @@
-package io.nandha.userprofiles.model
+package io.nandha.userprofiles.model.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import io.nandha.userprofiles.model.dao.CacheDao
+import io.nandha.userprofiles.model.data.RemoteKeys
+import io.nandha.userprofiles.model.dao.RemoteKeysDao
 import io.nandha.userprofiles.model.data.User
 
 
@@ -14,7 +17,7 @@ import io.nandha.userprofiles.model.data.User
 )
 
 abstract class CacheDb : RoomDatabase() {
-    abstract fun reposDao(): CacheDao
+    abstract fun cacheDao(): CacheDao
     abstract fun remoteKeysDao(): RemoteKeysDao
 
     companion object {
@@ -27,6 +30,6 @@ abstract class CacheDb : RoomDatabase() {
             }
 
         private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(context.applicationContext,CacheDb::class.java, "cache.db").allowMainThreadQueries().build()
+            Room.databaseBuilder(context.applicationContext, CacheDb::class.java, "cache.db").allowMainThreadQueries().build()
     }
 }

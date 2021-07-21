@@ -14,7 +14,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import io.nandha.userprofiles.R
 import io.nandha.userprofiles.databinding.ActivityMainBinding
-import io.nandha.userprofiles.model.CacheDb
+import io.nandha.userprofiles.model.db.CacheDb
 import io.nandha.userprofiles.view.adapters.LoadingStateAdapter
 import io.nandha.userprofiles.view.adapters.SearchResultAdapter
 import io.nandha.userprofiles.view.adapters.UserListAdapter
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             val query = intent.getStringExtra(SearchManager.QUERY)
             activityMainBinding.searchResultList.apply { if (query.isNullOrEmpty()) hide() else show() }
             query?.let {
-                val users = CacheDb.getInstance(this).reposDao().searchUser("%$query%")
+                val users = CacheDb.getInstance(this).cacheDao().searchUser("%$query%")
                 if (users.isNotEmpty()) {
                     searchResultAdapter.updateList(users)
                 }else{

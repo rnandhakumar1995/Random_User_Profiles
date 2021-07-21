@@ -29,7 +29,7 @@ class SearchResultAdapter(var users: List<User>) :
         val user = users[position]
         holder.name.text = user.name
         holder.cell.text = user.phone
-        Picasso.get().load(user.picture).into(holder.profilePic)
+        Picasso.get().load(user.picture).placeholder(R.drawable.profile_placeholder).into(holder.profilePic)
         holder.itemView.setOnClickListener {
             val intent = Intent(it.context, DisplayActivity::class.java)
             intent.putExtra("email", user.email)

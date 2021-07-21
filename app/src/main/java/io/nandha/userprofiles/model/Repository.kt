@@ -5,6 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import io.nandha.userprofiles.model.data.User
+import io.nandha.userprofiles.model.db.CacheDb
 import kotlinx.coroutines.flow.Flow
 
 
@@ -14,7 +15,7 @@ class Repository(private val api: Api, private val database: CacheDb) {
     }
 
     fun getUsers(): Flow<PagingData<User>> {
-        val pagingSourceFactory = { database.reposDao().getUsers() }
+        val pagingSourceFactory = { database.cacheDao().getUsers() }
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(pageSize = NETWORK_COUNT_PER_PAGE, enablePlaceholders = false),

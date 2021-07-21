@@ -27,7 +27,7 @@ class UserListAdapter : PagingDataAdapter<User, UserListAdapter.ViewHolder>(REPO
         user?.let {
             holder.name.text = it.name
             holder.cell.text = it.phone
-            Picasso.get().load(it.picture).into(holder.profilePic)
+            Picasso.get().load(it.picture).placeholder(R.drawable.profile_placeholder).into(holder.profilePic)
             holder.itemView.setOnClickListener { view ->
                 val intent = Intent(view.context, DisplayActivity::class.java)
                 intent.putExtra("email", it.email)
