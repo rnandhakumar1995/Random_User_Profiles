@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import coil.load
 import io.nandha.userprofiles.R
 import io.nandha.userprofiles.model.data.User
 import io.nandha.userprofiles.view.DisplayActivity
@@ -32,7 +32,11 @@ class SearchResultAdapter(var users: List<User>) :
         val user = users[position]
         holder.name.text = user.name
         holder.cell.text = user.phone
-        Picasso.get().load(user.picture).placeholder(R.drawable.profile_placeholder).into(holder.profilePic)
+
+        holder.profilePic.load(user.picture) {
+            crossfade(true)
+            placeholder(R.drawable.profile_placeholder)
+        }
         holder.itemView.setOnClickListener {
             val intent = Intent(it.context, DisplayActivity::class.java)
             intent.putExtra("email", user.email)

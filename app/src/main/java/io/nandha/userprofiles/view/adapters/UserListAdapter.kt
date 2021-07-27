@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import coil.load
 import io.nandha.userprofiles.R
 import io.nandha.userprofiles.model.data.User
 import io.nandha.userprofiles.view.DisplayActivity
@@ -27,7 +27,10 @@ class UserListAdapter : PagingDataAdapter<User, UserListAdapter.ViewHolder>(REPO
         user?.let {
             holder.name.text = it.name
             holder.cell.text = it.phone
-            Picasso.get().load(it.picture).placeholder(R.drawable.profile_placeholder).into(holder.profilePic)
+            holder.profilePic.load(it.picture) {
+                crossfade(true)
+                placeholder(R.drawable.profile_placeholder)
+            }
             holder.itemView.setOnClickListener { view ->
                 val intent = Intent(view.context, DisplayActivity::class.java)
                 intent.putExtra("email", it.email)

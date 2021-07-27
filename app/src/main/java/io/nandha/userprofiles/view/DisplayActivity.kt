@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.squareup.picasso.Picasso
+import coil.load
 import io.nandha.userprofiles.R
 import io.nandha.userprofiles.databinding.ActivityDisplayBinding
 import io.nandha.userprofiles.model.Api
@@ -44,7 +44,10 @@ class DisplayActivity : AppCompatActivity() {
         val fields = mutableListOf<DisplayItems>()
         user.apply {
             binding.toolbar.title = name
-            Picasso.get().load(picture).placeholder(R.drawable.profile_placeholder).into(binding.profilePic)
+            binding.profilePic.load(picture) {
+                crossfade(true)
+                placeholder(R.drawable.profile_placeholder)
+            }
             fields.add(DisplayItems("Email", email) {
                 val intent = Intent(Intent.ACTION_SENDTO)
                 intent.data = Uri.parse("mailto:")
