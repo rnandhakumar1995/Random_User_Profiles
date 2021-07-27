@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var activityMainBinding: ActivityMainBinding
-    private val searchResultAdapter by lazy { SearchResultAdapter(listOf()) }
+    private val searchResultAdapter = SearchResultAdapter(listOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,11 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_items, menu)
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchItem = menu.findItem(R.id.search)
-        (searchItem.actionView as SearchView).setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        (searchItem.actionView as SearchView).setSearchableInfo(
+            searchManager.getSearchableInfo(
+                componentName
+            )
+        )
         searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(p0: MenuItem?) = true
 
@@ -75,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                 val users = CacheDb.getInstance(this).cacheDao().searchUser("%$query%")
                 if (users.isNotEmpty()) {
                     searchResultAdapter.updateList(users)
-                }else{
+                } else {
                     activityMainBinding.searchResultList.hide()
                     activityMainBinding.searchError.show()
                 }
