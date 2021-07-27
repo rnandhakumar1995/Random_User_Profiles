@@ -14,6 +14,9 @@ import io.nandha.userprofiles.view.DisplayActivity
 
 class SearchResultAdapter(var users: List<User>) :
     RecyclerView.Adapter<SearchResultAdapter.ViewHolder>() {
+    init {
+        println("Initiali search adapter")
+    }
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.name)
         val profilePic: ImageView = view.findViewById(R.id.profile_pic)

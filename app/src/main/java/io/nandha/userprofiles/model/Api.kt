@@ -9,8 +9,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import java.lang.Exception
-import kotlin.jvm.Throws
 
 interface Api {
 
