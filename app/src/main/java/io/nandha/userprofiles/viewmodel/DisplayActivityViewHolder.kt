@@ -7,12 +7,12 @@ import io.nandha.userprofiles.model.Api
 import io.nandha.userprofiles.model.db.CacheDb
 import io.nandha.userprofiles.model.data.User
 import io.nandha.userprofiles.model.data.WeatherResponse
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 class DisplayActivityViewHolder(application: Application) : AndroidViewModel(application) {
     private val cacheDb by lazy { CacheDb.getInstance(application.applicationContext) }
-    val channel = ConflatedBroadcastChannel<WeatherResponse>()
+    val weatherReport = MutableSharedFlow<WeatherResponse>()
 
     fun getUser(user: String): User {
         return cacheDb.cacheDao().getUser(user)
@@ -22,7 +22,7 @@ class DisplayActivityViewHolder(application: Application) : AndroidViewModel(app
         val coordinates = coordinate.split(",")
         viewModelScope.launch {
             val weatherResponse = api.loadWeather(coordinates[0], coordinates[1])
-            channel.send(weatherResponse)
+            weatherReport.emit(weatherResponse)
         }
     }
 }

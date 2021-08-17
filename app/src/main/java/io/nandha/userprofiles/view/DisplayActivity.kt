@@ -13,7 +13,6 @@ import io.nandha.userprofiles.model.Api
 import io.nandha.userprofiles.model.data.User
 import io.nandha.userprofiles.view.adapters.DisplayItemsAdapter
 import io.nandha.userprofiles.viewmodel.DisplayActivityViewHolder
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -51,7 +50,7 @@ class DisplayActivity : AppCompatActivity() {
             fields.add(DisplayItems("Email", email) {
                 val intent = Intent(Intent.ACTION_SENDTO)
                 intent.data = Uri.parse("mailto:")
-                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email));
+                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
                 startActivity(intent)
             })
             fields.add(DisplayItems("Phone", phone) {
@@ -69,7 +68,7 @@ class DisplayActivity : AppCompatActivity() {
         lifecycleScope.launch {
             it.detail.text = getString(R.string.loading)
             viewModel.loadWeather(Api.create(), coordinate)
-            viewModel.channel.asFlow().collectLatest { result ->
+            viewModel.weatherReport.collectLatest { result ->
                 it.detail.text = getString(R.string.loading)
                 it.detail.text = result.weather[0].description.replaceFirstChar {
                     it.uppercase()
