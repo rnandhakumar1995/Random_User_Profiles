@@ -16,7 +16,7 @@ interface Api {
     suspend fun getUser(@Query("page") page: Int): Response
 
     @GET("https://api.openweathermap.org/data/2.5/weather?appid=d3fb0d7617197691b6198d4006159c6e")
-    suspend fun loadWeather(@Query("lat") lat: String, @Query("lon") lon: String): WeatherResponse
+    suspend fun loadWeather(@Query("lat") lat: String, @Query("lon") lon: String): retrofit2.Response<WeatherResponse>
 
     companion object {
         private const val BASE_URL = "https://randomuser.me/"

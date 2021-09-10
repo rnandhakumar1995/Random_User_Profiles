@@ -3,17 +3,18 @@ package io.nandha.userprofiles.view
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import coil.load
 import io.nandha.userprofiles.R
+import io.nandha.userprofiles.Result
 import io.nandha.userprofiles.databinding.ActivityDisplayBinding
 import io.nandha.userprofiles.model.Api
 import io.nandha.userprofiles.model.data.User
 import io.nandha.userprofiles.view.adapters.DisplayItemsAdapter
-import io.nandha.userprofiles.viewmodel.DisplayActivityViewHolder
-import kotlinx.coroutines.flow.collectLatest
+import io.nandha.userprofiles.viewmodel.DisplayActivityViewModel
 import kotlinx.coroutines.launch
 
 
@@ -26,13 +27,13 @@ data class DisplayItems(
 
 class DisplayActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDisplayBinding
-    private lateinit var viewModel: DisplayActivityViewHolder
+    private lateinit var viewModel: DisplayActivityViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDisplayBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        viewModel = ViewModelProvider(this).get(DisplayActivityViewHolder::class.java)
+        viewModel = ViewModelProvider(this).get(DisplayActivityViewModel::class.java)
         intent.extras?.getString("email")?.let {
             val userItems = getDetailItems(viewModel.getUser(it))
             binding.userDetails.adapter = DisplayItemsAdapter(userItems)
@@ -64,15 +65,24 @@ class DisplayActivity : AppCompatActivity() {
         return fields
     }
 
-    private fun updateWeatherReport(coordinate: String, it: DisplayItemsAdapter.ViewHolder) {
+    private fun updateWeatherReport(
+        coordinate: String,
+        viewHolder: DisplayItemsAdapter.ViewHolder
+    ) {
         lifecycleScope.launch {
-            it.detail.text = getString(R.string.loading)
-            viewModel.loadWeather(Api.create(), coordinate)
-            viewModel.weatherReport.collectLatest { result ->
-                it.detail.text = getString(R.string.loading)
-                it.detail.text = result.weather[0].description.replaceFirstChar {
-                    it.uppercase()
+            viewHolder.detail.text = getString(R.string.loading)
+            when (val result = viewModel.loadWeather(Api.create(), coordinate)) {
+                is Result.Success -> {
+                    viewHolder.detail.text = getString(R.string.loading)
+                    viewHolder.detail.text = result.data.weather[0].description.replaceFirstChar {
+                        it.uppercase()
+                    }
                 }
+                is Result.Error -> Toast.makeText(
+                    this@DisplayActivity,
+                    result.msg,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
