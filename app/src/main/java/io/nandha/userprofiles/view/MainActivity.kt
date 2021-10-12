@@ -23,12 +23,11 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var activityMainBinding: ActivityMainBinding
+    private  val activityMainBinding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val searchResultAdapter = SearchResultAdapter(listOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         val view = activityMainBinding.root
         setContentView(view)
         val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
