@@ -18,17 +18,13 @@ data class User(
 )
 
 fun List<ApiUser>.mapToUser(): List<User> {
-    val result = mutableListOf<User>()
-    for (user in this) {
-        result.add(user.run {
-            User(
-                email,
-                "${name.title}.${name.first} ${name.last}",
-                "${location.street.number}, ${location.street.name}, ${location.city}, ${location.state}, ${location.country} - ${location.postcode}",
-                "${location.coordinates.latitude},${location.coordinates.longitude}",
-                cell, phone, picture.thumbnail, picture.large, dob.date, dob.age
-            )
-        })
+    return this.map {
+        User(
+            it.email,
+            "${it.name.title}.${it.name.first} ${it.name.last}",
+            "${it.location.street.number}, ${it.location.street.name}, ${it.location.city}, ${it.location.state}, ${it.location.country} - ${it.location.postcode}",
+            "${it.location.coordinates.latitude},${it.location.coordinates.longitude}",
+            it.cell, it.phone, it.picture.thumbnail, it.picture.large, it.dob.date, it.dob.age
+        )
     }
-    return result
 }
