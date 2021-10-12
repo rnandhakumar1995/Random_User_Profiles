@@ -11,12 +11,9 @@ import io.nandha.userprofiles.model.db.CacheDb
 import kotlinx.coroutines.flow.Flow
 
 class MainActivityViewModel (application: Application) : AndroidViewModel(application) {
-    private var users: Flow<PagingData<User>>? = null
     private val repository: Repository = Repository(Api.create(), CacheDb.getInstance(application.applicationContext))
 
     fun loadUser(): Flow<PagingData<User>> {
-        val newResult = repository.getUsers().cachedIn(viewModelScope)
-        users = newResult
-        return newResult
+       return repository.getUsers().cachedIn(viewModelScope)
     }
 }
