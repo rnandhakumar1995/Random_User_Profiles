@@ -16,7 +16,7 @@ import io.nandha.userprofiles.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class MainActivity() : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var activityMainBinding: ActivityMainBinding
 
 
@@ -38,7 +38,8 @@ class MainActivity() : AppCompatActivity() {
 
     private fun setupAdapter(userList: RecyclerView): UserListAdapter {
         val userListAdapter = UserListAdapter()
-        userList.adapter = userListAdapter.withLoadStateFooter(footer = LoadingStateAdapter { userListAdapter.retry() })
+        userList.adapter =
+            userListAdapter.withLoadStateFooter(footer = LoadingStateAdapter { userListAdapter.retry() })
         userList.layoutManager = LinearLayoutManager(this)
         userListAdapter.addLoadStateListener {
             val isListEmpty = it.refresh is LoadState.NotLoading && userListAdapter.itemCount == 0
@@ -54,6 +55,8 @@ class MainActivity() : AppCompatActivity() {
     }
 
     private fun showEmptyList(show: Boolean) {
-
+        if (show) {
+            Toast.makeText(this, "No data found!", Toast.LENGTH_SHORT).show()
+        }
     }
 }
