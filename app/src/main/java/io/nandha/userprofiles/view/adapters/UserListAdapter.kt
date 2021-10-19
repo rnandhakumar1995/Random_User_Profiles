@@ -15,7 +15,7 @@ class UserListAdapter : PagingDataAdapter<User, UserListAdapter.ViewHolder>(REPO
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val user = getItem(position)
+        val user = getItem(holder.bindingAdapterPosition)
         user?.let {
             holder.itemView.findViewById<TextView>(R.id.email).text = it.email
         }
